@@ -34,7 +34,7 @@ export default {
           { required: true, message: "请输入用户名", trigger: "blur" },
           { min: 5, max: 11, message: "请输入5-11位数字", trigger: "blur" },
           {
-            pattern: /^d+$/,
+            pattern: /^\d+$/,
             message: "请输入正确的格式",
             trigger: "blur"
           }
@@ -49,7 +49,7 @@ export default {
       this.$refs.form.clearValidate(val);
     },
     handleLoginSubmit() {
-      this.$refs.form.validate(status, res => {
+      this.$refs.form.validate((status, res) => {
         if (status) {
           this.$axios({
             url: "/accounts/login",
@@ -57,7 +57,8 @@ export default {
             data: this.form
           }).then(res => {
             const { data } = res;
-            console.log(data);
+            this.$store.commit("user/setUserInfo", data);
+            console.log(this.$store.state.user.userInfo);
           });
         }
       });
