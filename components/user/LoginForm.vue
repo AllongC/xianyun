@@ -26,8 +26,8 @@ export default {
   data() {
     return {
       form: {
-        username: "13800138000",
-        password: "123456"
+        username: "",
+        password: ""
       },
       rules: {
         username: [
@@ -51,7 +51,16 @@ export default {
     handleLoginSubmit() {
       this.$refs.form.validate((status, res) => {
         if (status) {
-          this.$store.dispatch("user/login", this.form);
+          this.$store.dispatch("user/login", this.form).then(res => {
+            this.$confirm("登录成功", "提示", {
+              confirmButtonText: "确定",
+              showCancelButton: false,
+              type: "success",
+              center: true
+            }).then(() => {
+              this.$router.push("/");
+            });
+          });
         }
       });
     }

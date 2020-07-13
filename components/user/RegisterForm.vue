@@ -1,11 +1,11 @@
 <template>
   <el-form :model="form" ref="form" :rules="rules" class="form">
     <el-form-item class="form-item" prop="username">
-      <el-input placeholder="用户名手机" v-model="form.username"></el-input>
+      <el-input placeholder="用户名手机" @focus="getFocus('username')" v-model="form.username"></el-input>
     </el-form-item>
 
     <el-form-item class="form-item" prop="captcha">
-      <el-input placeholder="验证码" v-model="form.captcha">
+      <el-input placeholder="验证码" @focus="getFocus('captcha')" v-model="form.captcha">
         <template slot="append">
           <el-button @click="handleSendCaptcha">发送验证码</el-button>
         </template>
@@ -13,15 +13,25 @@
     </el-form-item>
 
     <el-form-item class="form-item" prop="nickname">
-      <el-input placeholder="你的名字" v-model="form.nickname"></el-input>
+      <el-input placeholder="你的名字" @focus="getFocus('nickname')" v-model="form.nickname"></el-input>
     </el-form-item>
 
     <el-form-item class="form-item" prop="password">
-      <el-input placeholder="密码" type="password" v-model="form.password"></el-input>
+      <el-input
+        placeholder="密码"
+        type="password"
+        @focus="getFocus('password')"
+        v-model="form.password"
+      ></el-input>
     </el-form-item>
 
     <el-form-item class="form-item" prop="confpwd">
-      <el-input placeholder="确认密码" type="password" v-model="form.confpwd"></el-input>
+      <el-input
+        placeholder="确认密码"
+        type="password"
+        @focus="getFocus('confpwd')"
+        v-model="form.confpwd"
+      ></el-input>
     </el-form-item>
 
     <el-button class="submit" type="primary" @click="handleRegSubmit">注册</el-button>
@@ -64,6 +74,9 @@ export default {
     };
   },
   methods: {
+    getFocus(val) {
+      this.$refs.form.clearValidate(val);
+    },
     // 发送验证码
     handleSendCaptcha() {
       this.$axios({
@@ -86,16 +99,21 @@ export default {
 
     // 注册
     handleRegSubmit() {
-      const { confpwd, ...data } = this.form;
-      this.$store.dispatch("user/register", data);
-      this.$refs.form.resetFields();
-      this.$confirm("注册成功", "提示", {
-        confirmButtonText: "确定",
-        showCancelButton: false,
-        type: "success",
-        center: true
-      }).then(() => {
-        this.$router.push("/");
+      this.$refs.form.validate((flag, res) => {
+        if (flag) {
+          const { confpwd, ...data } = this.form;
+          this.$store.dispatch("user/register", data).then(res => {
+            this.$refs.form.resetFields();
+            this.$confirm("注册成功", "提示", {
+              confirmButtonText: "确定",
+              showCancelButton: false,
+              type: "success",
+              center: true
+            }).then(() => {
+              this.$router.push("/");
+            });
+          });
+        }
       });
     }
   }
