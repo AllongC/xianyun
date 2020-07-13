@@ -26,8 +26,8 @@ export default {
   data() {
     return {
       form: {
-        username: "",
-        password: ""
+        username: "13800138000",
+        password: "123456"
       },
       rules: {
         username: [
@@ -51,15 +51,7 @@ export default {
     handleLoginSubmit() {
       this.$refs.form.validate((status, res) => {
         if (status) {
-          this.$axios({
-            url: "/accounts/login",
-            method: "post",
-            data: this.form
-          }).then(res => {
-            const { data } = res;
-            this.$store.commit("user/setUserInfo", data);
-            console.log(this.$store.state.user.userInfo);
-          });
+          this.$store.dispatch("user/login", this.form);
         }
       });
     }
