@@ -40,7 +40,8 @@ export default {
     {
       src: '@/plugins/localStorage',
       ssr: false
-    }
+    },
+    '@/plugins/axios'
   ],
 
   /*
