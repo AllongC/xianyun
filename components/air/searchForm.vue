@@ -149,7 +149,10 @@ export default {
     handleSubmit() {
       this.form.departCity = this.form.departCity.replace(/市$/, "");
       this.form.destCity = this.form.destCity.replace(/市$/, "");
-      console.log(this.form);
+      this.$router.push({
+        path: "/air/flights",
+        query: this.form
+      });
     }
   },
   mounted() {}
