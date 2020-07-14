@@ -99,7 +99,9 @@ export default {
             code: item.sort
           };
         });
-        return suggestRes;
+        return suggestRes.filter(item => {
+          return item.code;
+        });
       });
     },
 
@@ -107,6 +109,9 @@ export default {
     // value 是选中的值，cb是回调函数，接收要展示的列表
     queryDepartSearch(value, suggest) {
       this.searchCity(value).then(suggestRes => {
+        if (suggestRes.length == 1) {
+          this.form.departCode = suggestRes[0].code;
+        }
         suggest(suggestRes);
       });
     },
@@ -115,6 +120,9 @@ export default {
     // value 是选中的值，cb是回调函数，接收要展示的列表
     queryDestSearch(value, suggest) {
       this.searchCity(value).then(suggestRes => {
+        if (suggestRes.length == 1) {
+          this.form.destCode = suggestRes[0].code;
+        }
         suggest(suggestRes);
       });
     },
@@ -139,6 +147,8 @@ export default {
 
     // 提交表单是触发
     handleSubmit() {
+      this.form.departCity = this.form.departCity.replace(/市$/, "");
+      this.form.destCity = this.form.destCity.replace(/市$/, "");
       console.log(this.form);
     }
   },
