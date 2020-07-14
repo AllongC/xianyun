@@ -82,10 +82,9 @@ export default {
     // tab切换时触发
     handleSearchTab(item, index) {},
 
-    // 出发城市输入框获得焦点时触发
-    // value 是选中的值，cb是回调函数，接收要展示的列表
-    queryDepartSearch(value, suggest) {
-      this.$axios({
+    //搜索城市
+    searchCity(value) {
+      return this.$axios({
         url: "/cities",
         method: "get",
         params: {
@@ -95,9 +94,18 @@ export default {
         const { data } = res.data;
         const suggestRes = data.map(item => {
           return {
-            value: item.name
+            value: item.name.replace(/市$/, ""),
+            code: item.sort
           };
         });
+        return suggestRes;
+      });
+    },
+
+    // 出发城市输入框获得焦点时触发
+    // value 是选中的值，cb是回调函数，接收要展示的列表
+    queryDepartSearch(value, suggest) {
+      this.searchCity(value).then(suggestRes => {
         suggest(suggestRes);
       });
     },
@@ -105,28 +113,20 @@ export default {
     // 目标城市输入框获得焦点时触发
     // value 是选中的值，cb是回调函数，接收要展示的列表
     queryDestSearch(value, suggest) {
-      this.$axios({
-        url: "/cities",
-        method: "get",
-        params: {
-          name: value
-        }
-      }).then(res => {
-        const { data } = res.data;
-        const suggestRes = data.map(item => {
-          return {
-            value: item.name
-          };
-        });
+      this.searchCity(value).then(suggestRes => {
         suggest(suggestRes);
       });
     },
 
     // 出发城市下拉选择时触发
-    handleDepartSelect(item) {},
+    handleDepartSelect(item) {
+      this.form.departCode = item.code;
+    },
 
     // 目标城市下拉选择时触发
-    handleDestSelect(item) {},
+    handleDestSelect(item) {
+      this.form.destCode = item.code;
+    },
 
     // 确认选择日期时触发
     handleDate(value) {},
