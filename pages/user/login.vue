@@ -17,7 +17,7 @@
         <LoginForm v-if="currentId == 0" />
 
         <!-- 注册功能组件 -->
-        <RegisterForm v-if="currentId == 1" />
+        <RegisterForm @changeId="currentId=0" v-if="currentId == 1" />
       </div>
     </el-row>
   </div>

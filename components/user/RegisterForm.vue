@@ -109,8 +109,8 @@ export default {
               showCancelButton: false,
               type: "success",
               center: true
-            }).then(() => {
-              this.$router.push("/");
+            }).then(res => {
+              this.$emit("changeId");
             });
           });
         }
