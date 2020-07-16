@@ -109,7 +109,7 @@ export default {
     // value 是选中的值，cb是回调函数，接收要展示的列表
     queryDepartSearch(value, suggest) {
       this.searchCity(value).then(suggestRes => {
-        if (suggestRes.length == 1) {
+        if (suggestRes.length > 0) {
           this.form.departCode = suggestRes[0].code;
         }
         suggest(suggestRes);
@@ -120,7 +120,7 @@ export default {
     // value 是选中的值，cb是回调函数，接收要展示的列表
     queryDestSearch(value, suggest) {
       this.searchCity(value).then(suggestRes => {
-        if (suggestRes.length == 1) {
+        if (suggestRes.length > 0) {
           this.form.destCode = suggestRes[0].code;
         }
         suggest(suggestRes);
