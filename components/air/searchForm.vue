@@ -143,7 +143,14 @@ export default {
     },
 
     // 触发和目标城市切换时触发
-    handleReverse() {},
+    handleReverse() {
+      const middleCity = this.form.destCity;
+      const middleCode = this.form.destCode;
+      this.form.destCity = this.form.departCity;
+      this.form.destCode = this.form.departCode;
+      this.form.departCity = middleCity;
+      this.form.departCode = middleCode;
+    },
 
     // 提交表单是触发
     handleSubmit() {
