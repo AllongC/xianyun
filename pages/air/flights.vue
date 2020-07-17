@@ -5,7 +5,12 @@
       <div class="flights-content">
         <!-- 过滤条件 -->
         <div>
-          <FlightsFilters v-if="flights.options" :options="totalFlights.options" />
+          <FlightsFilters
+            v-if="totalFlights.options"
+            :options="totalFlights.options"
+            :flights="totalFlights.flights"
+            @changeDate="changeDate"
+          />
         </div>
 
         <!-- 航班头部布局 -->
@@ -67,6 +72,10 @@ export default {
     },
     changeSize(size) {
       this.pageSize = size;
+    },
+    changeDate(dateList) {
+      this.flights = dateList;
+      this.total = this.flights.length;
     }
   },
   created() {

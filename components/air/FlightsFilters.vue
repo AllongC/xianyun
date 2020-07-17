@@ -21,7 +21,7 @@
         <el-select size="mini" v-model="flightTimes" placeholder="起飞时间" @change="handleFlightTimes">
           <el-option
             :label="`${item.from}:00 - ${item.to}:00 `"
-            :value="item"
+            :value="[item.from,item.to]"
             v-for="(item,index) in options.flightTimes"
             :key="index"
           ></el-option>
@@ -58,7 +58,8 @@
 <script>
 export default {
   props: {
-    options: Object
+    options: Object,
+    flights: Array
   },
   data() {
     return {
@@ -85,26 +86,44 @@ export default {
   },
   mounted() {
     this.route = this.$route.query;
+    console.log(this.flights[0]);
   },
   methods: {
     // 选择机场时候触发
     handleAirport(value) {
       console.log(value);
+      const dateList = this.flights.filter(item => {
+        return item.org_airport_name == value;
+      });
+      this.$emit("changeDate", dateList);
     },
 
     // 选择出发时间时候触发
     handleFlightTimes(value) {
       console.log(value);
+      const dateList = this.flights.filter(item => {
+        const time = Number(item.dep_time.split(":")[0]);
+        return time >= value[0] && time <= value[1];
+      });
+      this.$emit("changeDate", dateList);
     },
 
     // 选择航空公司时候触发
     handleCompany(value) {
       console.log(value);
+      const dateList = this.flights.filter(item => {
+        return item.airline_name == value;
+      });
+      this.$emit("changeDate", dateList);
     },
 
     // 选择机型时候触发
     handleAirSize(value) {
       console.log(value);
+      const dateList = this.flights.filter(item => {
+        return item.plane_size == value;
+      });
+      this.$emit("changeDate", dateList);
     },
 
     // 撤销条件时候触发
