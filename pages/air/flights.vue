@@ -5,7 +5,7 @@
       <div class="flights-content">
         <!-- 过滤条件 -->
         <div>
-          <FlightsFilters />
+          <FlightsFilters v-if="flights.options" :options="flights.options" />
         </div>
 
         <!-- 航班头部布局 -->
@@ -58,7 +58,7 @@ export default {
     currentList() {
       const start = this.pageSize * (this.currentPage - 1);
       const end = this.pageSize * this.currentPage;
-      this.dateList = this.flights.slice(start, end);
+      this.dateList = this.flights.flights.slice(start, end);
     },
     changePage(page) {
       this.currentPage = page;
@@ -76,7 +76,7 @@ export default {
       params: this.$route.query
     }).then(res => {
       this.total = res.data.total;
-      this.flights = res.data.flights;
+      this.flights = res.data;
       this.currentList();
     });
   }
