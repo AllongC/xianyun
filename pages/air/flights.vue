@@ -11,7 +11,7 @@
 
         <!-- 航班信息 -->
         <div>
-          <FlightsItem v-for="(item,index) in flights" :key="index" :flights="item" />
+          <FlightsItem v-for="(item,index) in currentFlights" :key="index" :flights="item" />
           <el-pagination
             @size-change="changeSize"
             @current-change="changePage"
@@ -39,14 +39,25 @@ export default {
   data() {
     return {
       flights: [],
-      total: 100,
+      currentFlights: [],
+      total: 0,
       pageSize: 5,
       currentPage: 1
     };
   },
   methods: {
-    changePage() {},
-    changeSize() {}
+    changePage(page) {
+      this.currentPage = page;
+      const start = this.pageSize * (this.currentPage - 1);
+      const end = this.pageSize * this.currentPage;
+      this.currentFlights = this.flights.slice(start, end);
+    },
+    changeSize(size) {
+      this.pageSize = size;
+      const start = this.pageSize * (this.currentPage - 1);
+      const end = this.pageSize * this.currentPage;
+      this.currentFlights = this.flights.slice(start, end);
+    }
   },
   components: {
     FlightsListHead,
@@ -58,8 +69,11 @@ export default {
       method: "get",
       params: this.$route.query
     }).then(res => {
-      console.log(res.data);
+      this.total = res.data.total;
       this.flights = res.data.flights;
+      const start = this.pageSize * (this.currentPage - 1);
+      const end = this.pageSize * this.currentPage;
+      this.currentFlights = this.flights.slice(start, end);
     });
   }
 };
