@@ -90,35 +90,43 @@ export default {
   },
   methods: {
     selectOptions() {
+      let dateList = [...this.flights];
       if (this.airport) {
-        const dateList = this.flights.filter(item => {
+        dateList = dateList.filter(item => {
           return item.org_airport_name == this.airport;
         });
         this.$emit("changeDate", dateList);
       }
       if (this.flightTimes) {
-        const dateList = this.flights.filter(item => {
+        dateList = dateList.filter(item => {
           const time = Number(item.dep_time.split(":")[0]);
-          return time >= this.flightTimes[0] && time <= this.flightTimes[1];
+          return this.flightTimes[0] < time && this.flightTimes[1] > time;
         });
         this.$emit("changeDate", dateList);
       }
       if (this.company) {
-        const dateList = this.flights.filter(item => {
+        dateList = dateList.filter(item => {
           return item.airline_name == this.company;
         });
         this.$emit("changeDate", dateList);
       }
       if (this.airSize) {
-        const dateList = this.flights.filter(item => {
-          return item.plane_size == airSize;
+        dateList = dateList.filter(item => {
+          return item.plane_size == this.airSize;
         });
         this.$emit("changeDate", dateList);
       }
     },
 
     // 撤销条件时候触发
-    handleFiltersCancel() {}
+    handleFiltersCancel() {
+      this.airport = "";
+      this.flightTimes = "";
+      this.company = "";
+      this.airSize = "";
+      const dateList = this.flights;
+      this.$emit("changeDate", dateList);
+    }
   }
 };
 </script>
