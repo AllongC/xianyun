@@ -12,6 +12,15 @@
         <!-- 航班信息 -->
         <div>
           <FlightsItem v-for="(item,index) in flights" :key="index" :flights="item" />
+          <el-pagination
+            @size-change="changeSize"
+            @current-change="changePage"
+            :current-page="currentPage"
+            :page-sizes="[5,10,15,20]"
+            :page-size="pageSize"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="total"
+          ></el-pagination>
         </div>
       </div>
 
@@ -27,14 +36,21 @@
 import FlightsListHead from "@/components/air/FlightsListHead";
 import FlightsItem from "@/components/air/FlightsItem";
 export default {
+  data() {
+    return {
+      flights: [],
+      total: 100,
+      pageSize: 5,
+      currentPage: 1
+    };
+  },
+  methods: {
+    changePage() {},
+    changeSize() {}
+  },
   components: {
     FlightsListHead,
     FlightsItem
-  },
-  data() {
-    return {
-      flights: []
-    };
   },
   created() {
     this.$axios({
@@ -42,6 +58,7 @@ export default {
       method: "get",
       params: this.$route.query
     }).then(res => {
+      console.log(res.data);
       this.flights = res.data.flights;
     });
   }
