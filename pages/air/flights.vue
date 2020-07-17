@@ -99,4 +99,7 @@ export default {
   text-align: center;
   color: #666;
 }
+.el-pagination {
+  text-align: center;
+}
 </style>
