@@ -5,17 +5,17 @@
       <div class="flights-content">
         <!-- 过滤条件 -->
         <div>
-          <FlightsFilters v-if="flights.options" :options="flights.options" />
+          <FlightsFilters v-if="flights.options" :options="totalFlights.options" />
         </div>
 
         <!-- 航班头部布局 -->
         <FlightsListHead />
 
         <!-- 航班信息 -->
-        <div v-if="dateList.length">
+        <div v-if="flights.length">
           <FlightsItem v-for="(item,index) in dateList" :key="index" :flights="item" />
         </div>
-        <div v-if="!dateList.length" class="none">暂无该航班机票</div>
+        <div v-if="!flights.length" class="none">暂无该航班机票</div>
         <el-pagination
           @size-change="changeSize"
           @current-change="changePage"
@@ -47,26 +47,26 @@ export default {
   },
   data() {
     return {
+      totalFlights: [],
       flights: [],
-      dateList: [],
       total: 0,
       pageSize: 5,
       currentPage: 1
     };
   },
-  methods: {
-    currentList() {
+  computed: {
+    dateList() {
       const start = this.pageSize * (this.currentPage - 1);
       const end = this.pageSize * this.currentPage;
-      this.dateList = this.flights.flights.slice(start, end);
-    },
+      return this.flights.slice(start, end);
+    }
+  },
+  methods: {
     changePage(page) {
       this.currentPage = page;
-      this.currentList();
     },
     changeSize(size) {
       this.pageSize = size;
-      this.currentList();
     }
   },
   created() {
@@ -75,9 +75,9 @@ export default {
       method: "get",
       params: this.$route.query
     }).then(res => {
+      this.totalFlights = res.data;
       this.total = res.data.total;
-      this.flights = res.data;
-      this.currentList();
+      this.flights = res.data.flights;
     });
   }
 };
