@@ -14,7 +14,7 @@
               <span>{{flights.org_airport_name}} {{flights.org_airport_quay}}</span>
             </el-col>
             <el-col :span="8" class="flight-time">
-              <span>2时20分假</span>
+              <span>{{duration}}</span>
             </el-col>
             <el-col :span="8" class="flight-airport">
               <strong>{{flights.arr_time}}</strong>
@@ -67,6 +67,19 @@ export default {
       default: () => {
         return {};
       }
+    }
+  },
+  computed: {
+    duration() {
+      const start = this.flights.dep_time.split(":");
+      const end = this.flights.arr_time.split(":");
+      let startTime = +start[0] * 60 + +start[1];
+      let endTime = +end[0] * 60 + +end[1];
+      if (end[0] == "00") {
+        endTime += 24 * 60;
+      }
+      const time = Math.abs(startTime - endTime);
+      return Math.floor(time / 60) + "时" + (time % 60) + "分";
     }
   },
   mounted() {
