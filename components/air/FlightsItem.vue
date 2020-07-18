@@ -49,7 +49,7 @@
               </el-col>
               <el-col :span="5" class="price">￥{{item.par_price}}</el-col>
               <el-col :span="3" class="choose-button">
-                <el-button type="warning" size="mini">选定</el-button>
+                <el-button type="warning" size="mini" @click="sendSet(item.seat_xid)">选定</el-button>
                 <p v-if="item.nums!=='A'">剩余：{{item.nums}}</p>
               </el-col>
             </el-row>
@@ -75,6 +75,11 @@ export default {
       default: () => {
         return {};
       }
+    }
+  },
+  methods: {
+    sendSet(index) {
+      this.$router.push(`/air/order?id=${this.flights.id}&seat_xid=${index}`);
     }
   },
   computed: {

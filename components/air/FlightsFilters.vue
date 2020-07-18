@@ -86,7 +86,6 @@ export default {
   },
   mounted() {
     this.route = this.$route.query;
-    console.log(this.flights[0]);
   },
   methods: {
     selectOptions() {
