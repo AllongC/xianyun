@@ -61,6 +61,11 @@ export default {
       currentPage: 1
     };
   },
+  watch: {
+    $route() {
+      this.load();
+    }
+  },
   computed: {
     dateList() {
       const start = this.pageSize * (this.currentPage - 1);
@@ -78,18 +83,21 @@ export default {
     changeDate(dateList) {
       this.flights = dateList;
       this.total = this.flights.length;
+    },
+    load() {
+      this.$axios({
+        url: "/airs",
+        method: "get",
+        params: this.$route.query
+      }).then(res => {
+        this.totalFlights = res.data;
+        this.total = res.data.total;
+        this.flights = res.data.flights;
+      });
     }
   },
   created() {
-    this.$axios({
-      url: "/airs",
-      method: "get",
-      params: this.$route.query
-    }).then(res => {
-      this.totalFlights = res.data;
-      this.total = res.data.total;
-      this.flights = res.data.flights;
-    });
+    this.load();
   }
 };
 </script>
