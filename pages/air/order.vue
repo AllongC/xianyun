@@ -3,7 +3,7 @@
     <el-row type="flex" justify="space-between">
       <!-- 订单表单 -->
       <div class="main">
-        <OrderForm />
+        <OrderForm v-if="order.insurances" :insurances="order.insurances" />
       </div>
 
       <!-- 侧边栏 -->
@@ -18,6 +18,21 @@ import OrderForm from "@/components/air/orderForm.vue";
 export default {
   components: {
     OrderForm
+  },
+  data() {
+    return {
+      order: []
+    };
+  },
+  mounted() {
+    this.$axios({
+      url: "/airs/" + this.$route.query.id,
+      method: "get",
+      params: this.$route.query.seat_xid
+    }).then(res => {
+      const { data } = res;
+      this.order = data;
+    });
   }
 };
 </script>
