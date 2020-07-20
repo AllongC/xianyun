@@ -5,7 +5,7 @@
       <el-form class="member-info">
         <div class="member-info-item" v-for="(item,index) in users" :key="index">
           <el-form-item label="乘机人">
-            <el-input placeholder="姓名" class="input-with-select" v-model="item.name"></el-input>
+            <el-input placeholder="姓名" class="input-with-select" v-model="item.username"></el-input>
           </el-form-item>
 
           <el-form-item label="证件类型">
@@ -71,7 +71,7 @@ export default {
     return {
       users: [
         {
-          name: "",
+          username: "",
           id: ""
         }
       ],
@@ -114,7 +114,26 @@ export default {
 
     // 提交订单
     handleSubmit() {
-      console.log(this.checkList);
+      const data = {
+        users: this.users,
+        insurances: this.checkList,
+        invoice: false,
+        seat_xid: this.$route.query.seat_xid,
+        air: this.$route.query.id,
+        contactPhone: this.contactPhone,
+        contactName: this.contactName,
+        captcha: this.captcha
+      };
+      this.$axios({
+        url: "/airorders",
+        method: "post",
+        data,
+        headers: {
+          Authorization: "Bearer " + this.$store.state.user.userInfo.token
+        }
+      }).then(res => {
+        console.log(res);
+      });
     }
   }
 };
