@@ -78,10 +78,37 @@ export default {
       checkList: [],
       contactPhone: "",
       contactName: "",
-      captcha: ""
+      captcha: "",
+      totalPrice: 0
     };
   },
+  watch: {
+    users: {
+      handler() {
+        this.computedPrice();
+      },
+      immediate: true
+    },
+    checkList: {
+      handler() {
+        this.computedPrice();
+      },
+      immediate: true
+    }
+  },
   methods: {
+    computedPrice() {
+      let price = 0;
+      price += this.data.seat_infos.org_settle_price * this.users.length;
+      this.data.insurances.forEach(item => {
+        if (this.checkList.indexOf(item.id) >= 0) {
+          price += item.price * this.users.length;
+        }
+      });
+      console.log(price);
+      this.totalPrice = price;
+      this.$emit("getPrice", this.totalPrice);
+    },
     // 添加乘机人
     handleAddUsers() {
       this.users.push({
