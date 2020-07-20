@@ -28,7 +28,7 @@
       <div>
         <div class="insurance-item">
           <el-checkbox-group v-model="checkList">
-            <div v-for="(item,index) in insurances" :key="index">
+            <div v-for="(item,index) in data.insurances" :key="index">
               <el-checkbox :label="item.id">航空意外险：￥{{item.price}}/份×1 最高赔付{{item.compensation}}</el-checkbox>
             </div>
           </el-checkbox-group>
@@ -65,7 +65,7 @@
 <script>
 export default {
   props: {
-    insurances: Array
+    data: Object
   },
   data() {
     return {

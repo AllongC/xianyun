@@ -3,35 +3,39 @@
     <el-row type="flex" justify="space-between">
       <!-- 订单表单 -->
       <div class="main">
-        <OrderForm v-if="order.insurances" :insurances="order.insurances" />
+        <OrderForm v-if="order" :data="order" />
       </div>
 
       <!-- 侧边栏 -->
-      <div class="aside"></div>
+      <OrderAside v-if="order" :data="order" />
     </el-row>
   </div>
 </template>
 
 <script>
 import OrderForm from "@/components/air/orderForm.vue";
-
+import OrderAside from "@/components/air/OrderAside.vue";
 export default {
   components: {
-    OrderForm
+    OrderForm,
+    OrderAside
   },
   data() {
     return {
-      order: []
+      order: null
     };
   },
   mounted() {
     this.$axios({
       url: "/airs/" + this.$route.query.id,
       method: "get",
-      params: this.$route.query.seat_xid
+      params: {
+        seat_xid: this.$route.query.seat_xid
+      }
     }).then(res => {
       const { data } = res;
       this.order = data;
+      console.log(this.order);
     });
   }
 };
