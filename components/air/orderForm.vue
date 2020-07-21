@@ -60,11 +60,11 @@
                 }"
           :rules="rules"
         >
-          <el-form-item label="姓名" prop="contactPhone">
+          <el-form-item label="姓名" prop="contactName">
             <el-input v-model="contactName"></el-input>
           </el-form-item>
 
-          <el-form-item label="手机" prop="contactName">
+          <el-form-item label="手机" prop="contactPhone">
             <el-input placeholder="请输入内容" v-model="contactPhone">
               <template slot="append">
                 <el-button @click="handleSendCaptcha">发送验证码</el-button>
@@ -221,8 +221,10 @@ export default {
 
     // 提交订单
     handleSubmit() {
-      this.dialogVisible = true;
-      return;
+      if (!this.$store.state.user.userInfo.token) {
+        this.dialogVisible = true;
+        return;
+      }
       const data = {
         users: this.users,
         insurances: this.checkList,
