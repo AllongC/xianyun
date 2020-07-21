@@ -79,11 +79,31 @@
         <el-button type="warning" class="submit" @click="handleSubmit">提交订单</el-button>
       </div>
     </div>
+
+    <el-dialog
+      title="请先登录/注册"
+      :visible.sync="dialogVisible"
+      width="30%"
+      :before-close="handleClose"
+    >
+      <LoginForm v-if="currentId==0" @LoginSuccess="dialogVisible = false" />
+      <RegisterForm v-if="currentId==1" @changeId="dialogVisible = false" />
+      <span slot="footer" class="dialog-footer" @click="toggleStatus">
+        {{currentInfo[currentId]}}
+        <i class="el-icon-arrow-right"></i>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+import LoginForm from "@/components/user/LoginForm";
+import RegisterForm from "@/components/user/RegisterForm";
 export default {
+  components: {
+    LoginForm,
+    RegisterForm
+  },
   props: {
     data: Object
   },
@@ -95,6 +115,9 @@ export default {
           id: ""
         }
       ],
+      currentId: 0,
+      currentInfo: ["没有账号，前往注册", "已有账号，请登录"],
+      dialogVisible: false,
       checkList: [],
       contactPhone: "",
       contactName: "",
@@ -140,6 +163,20 @@ export default {
     }
   },
   methods: {
+    toggleStatus() {
+      if (this.currentId == 0) {
+        this.currentId = 1;
+      } else {
+        this.currentId = 0;
+      }
+    },
+    handleClose(done) {
+      this.$confirm("确认关闭？")
+        .then(_ => {
+          done();
+        })
+        .catch(_ => {});
+    },
     computedPrice() {
       let price = 0;
       price += this.data.seat_infos.org_settle_price * this.users.length;
@@ -184,6 +221,8 @@ export default {
 
     // 提交订单
     handleSubmit() {
+      this.dialogVisible = true;
+      return;
       const data = {
         users: this.users,
         insurances: this.checkList,
@@ -292,5 +331,14 @@ export default {
   display: block;
   width: 250px;
   height: 50px;
+}
+.dialog-footer {
+  font-size: 12px;
+  color: #66b1ff;
+  margin-top: 15px;
+  cursor: pointer;
+  &:hover {
+    text-decoration: underline;
+  }
 }
 </style>

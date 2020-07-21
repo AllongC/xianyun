@@ -58,7 +58,7 @@ export default {
               type: "success",
               center: true
             }).then(() => {
-              this.$router.push("/");
+              this.$emit("LoginSuccess");
             });
           });
         }

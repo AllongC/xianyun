@@ -14,7 +14,7 @@
         </el-row>
 
         <!-- 登录功能组件 -->
-        <LoginForm v-if="currentId == 0" />
+        <LoginForm v-if="currentId == 0" @LoginSuccess="LoginSuccess" />
 
         <!-- 注册功能组件 -->
         <RegisterForm @changeId="currentId=0" v-if="currentId == 1" />
@@ -37,6 +37,9 @@ export default {
     };
   },
   methods: {
+    LoginSuccess() {
+      this.$router.push("/");
+    },
     activeId(index) {
       this.currentId = index;
     }
