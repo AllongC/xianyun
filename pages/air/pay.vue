@@ -28,7 +28,8 @@ import QRCode from "qrcode";
 export default {
   data() {
     return {
-      data: null
+      data: null,
+      timer: null
     };
   },
   watch: {
@@ -71,7 +72,7 @@ export default {
         const { statusTxt, trade_state } = res.data;
         if (trade_state == "NOTPAY") {
           console.log(statusTxt);
-          setTimeout(() => {
+          this.timer = setTimeout(() => {
             this.checkPay();
           }, 2000);
         }
@@ -93,6 +94,9 @@ export default {
         this.$message("支付失败");
       }
     }
+  },
+  destroyed() {
+    clearTimeout(this.timer);
   }
 };
 </script>
