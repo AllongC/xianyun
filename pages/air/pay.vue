@@ -47,10 +47,51 @@ export default {
             QRCode.toCanvas(this.$refs.canvas, data.payInfo.code_url, {
               width: 200
             });
+            this.checkPay();
           });
         }
       },
       immediate: true
+    }
+  },
+  methods: {
+    checkPay() {
+      this.$axios({
+        url: "/airorders/checkpay",
+        method: "post",
+        data: {
+          id: this.data.id,
+          nonce_str: this.data.price,
+          out_trade_no: this.data.payInfo.order_no
+        },
+        headers: {
+          Authorization: "Bearer " + this.$store.state.user.userInfo.token
+        }
+      }).then(res => {
+        const { statusTxt, trade_state } = res.data;
+        if (trade_state == "NOTPAY") {
+          console.log(statusTxt);
+          setTimeout(() => {
+            this.checkPay();
+          }, 2000);
+        }
+        this.patStates(trade_state);
+      });
+    },
+    patStates(trade_state) {
+      if (trade_state == "SUCCESS") {
+        this.$message("支付成功");
+      } else if (trade_state == "REFUND") {
+        this.$message("转入退款");
+      } else if (trade_state == "CLOSED") {
+        this.$message("已关闭");
+      } else if (trade_state == "REVOKED") {
+        this.$message("已撤销");
+      } else if (trade_state == "USERPAYING") {
+        this.$message("用户支付中");
+      } else if (trade_state == "PAYERROR") {
+        this.$message("支付失败");
+      }
     }
   }
 };
